@@ -34,11 +34,11 @@ const server = app.listen(PORT, () => console.log(`The server has started on por
 
 
 
-const io = socketio(server,{pingTimeout: 0, origins:"*:*",allowEIO3: true})
+const sio = socketio(server,{pingTimeout: 0, origins:"*:*",allowEIO3: true})
 
 let interval;
 
-io.on("connection", (socket) => {
+sio.on("connection", (socket) => {
   console.log("New client connected");
 
   socket.on("pythondata",function(frame){
