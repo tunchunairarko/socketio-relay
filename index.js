@@ -4,7 +4,7 @@ const cors = require("cors");
 require("dotenv").config();
 const helmet = require("helmet");
 const socketio = require("socket.io")
-import io from "socket.io-client"
+const io = require("socket.io-client")
 const socketioclient = io("http://localhost:9000")
 
 const app = express();
