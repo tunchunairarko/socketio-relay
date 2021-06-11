@@ -63,17 +63,14 @@ sio.on("connection", (socket) => {
     socketioclient.emit("FROMREMOTEROBOT",data)
     
   })
-  socket.on("ANIMUSFPS",function(data){
-    console.log(data)
-    socketioclient.emit("FPSDATA",data)
-  })
+  
   socket.on("PEPPERBATTERY",function(data){
     console.log(data)
     socketioclient.emit("BATTERYDATA",data)
   })
-  socket.on("PEPPERGAZE",function(data){
+  socket.on("FACETRACKSTATUS",function(data){
     console.log(data)
-    socketioclient.emit("GAZEDATA",data)
+    socketioclient.emit("FACETRACKDATA",data)
   })
   socket.on("PEPPERSONAR",function(data){
     console.log(data)
