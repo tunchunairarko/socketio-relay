@@ -76,6 +76,10 @@ sio.on("connection", (socket) => {
     console.log(data)
     socketioclient.emit("SONARDATA",data)
   })
+  socket.on("RELAYFACETRACKSTATUS",function(data){
+    console.log(data)
+    socketioclient.emit("TOFACETRACKSTATUS",data)
+  })
   socket.on("PEPPERCONTEST",function(data){
     console.log(data)
   })
