@@ -22,8 +22,8 @@ app.use((req, res, next) => {
 // set up routes
 
 
-const server = app.listen(PORT, () => console.log(`The server has started on port: ${PORT}`));
-
+const server = app.listen(PORT, () => console.log(`RetraDev relay server has started on port: ${PORT}`));
+console.log("Listening to the LocalCloud at port: 9000");
 /////////////////////
 //////////////////////
 ///////////////////
@@ -35,7 +35,7 @@ const sio = socketio(server,{pingTimeout: 0, origins:"*:*",allowEIO3: true})
 let interval;
 
 sio.on("connection", (socket) => {
-  console.log("New client connected");
+  console.log("RetraDev robot client connected");
 
   socket.on("pythondata",function(frame){
     
@@ -48,42 +48,69 @@ sio.on("connection", (socket) => {
   
 
   socket.on("frontenddata",function(data){
-    console.log(data)
+    //console.log(data)
     socketioclient.emit("FROMNODEAPI",data)
   })
 
   socket.on("frontendspeechdata",function(data){
-    console.log(data)
+    //console.log(data)
     socketioclient.emit("FROMNODESPEECHAPI",data)
   })
 
   socket.on("remoterobotdata",function(data){
-    console.log(data)
+    //console.log(data)
     
     socketioclient.emit("FROMREMOTEROBOT",data)
     
   })
   
   socket.on("PEPPERBATTERY",function(data){
-    console.log(data)
+    //console.log(data)
+    // data.relayservertime= new Date().getTime()
     socketioclient.emit("BATTERYDATA",data)
   })
   socket.on("FACETRACKSTATUS",function(data){
-    console.log(data)
+    //console.log(data)
+    // data.relayservertime= new Date().getTime()
     socketioclient.emit("FACETRACKDATA",data)
   })
   socket.on("PEPPERSONAR",function(data){
-    console.log(data)
+    //console.log(data)
+    // data.relayservertime= new Date().getTime()
     socketioclient.emit("SONARDATA",data)
   })
-  socket.on("RELAYFACETRACKSTATUS",function(data){
-    console.log(data)
-    socketioclient.emit("TOFACETRACKSTATUS",data)
-  })
+  
   socket.on("PEPPERCONTEST",function(data){
-    console.log(data)
+    //console.log(data)
+  })
+  socket.on("PONG",function(data){
+    //console.log(data)
+    socketioclient.emit("RELAYPONG",data)
+  })
+
+  socketioclient.on("RELAYFACETRACKSTATUS",function(data){
+    // console.log("FROMLOCALCLOUD "+data)
+    socket.broadcast.emit("TOFACETRACKSTATUS",data)
+  })
+  socketioclient.on("RELAYWAVEHAND",function(data){
+    //console.log(data)
+    socket.broadcast.emit("TOTOWAVEANIMATION",data)
+  })
+  socket.on("PING",function(data){
+    // console.log("PING: "+data)
+    socketioclient.emit("RELAYPING",data)
+  })
+  
+  socketioclient.on("PONG",function(data){
+    // console.log("PONG: "+data)
+    socket.emit("RELAYPONG",data)
+  })
+  socket.on("RTT",function(data){
+    socketioclient.emit("RELAYRTT",data)
   })
 
 });
+
+
 
 
