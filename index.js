@@ -28,8 +28,6 @@ console.log("Listening to the LocalCloud at port: 9000");
 //////////////////////
 ///////////////////
 
-
-
 const sio = socketio(server,{pingTimeout: 0, origins:"*:*",allowEIO3: true})
 
 let interval;
@@ -88,25 +86,43 @@ sio.on("connection", (socket) => {
     socketioclient.emit("RELAYPONG",data)
   })
 
+  
+  socket.on("PING",function(data){
+    // console.log("PING: "+data)
+    socketioclient.emit("RELAYPING",data)
+  })
+  
+  
+  socket.on("CAMTEST",function(data){
+    // console.log("r")
+    // socket.broadcast.emit("IPCAM",data)
+    socketioclient.emit("RELAYCAMTEST")
+  })
+
+  socket.on("RTT",function(data){
+    socketioclient.emit("RELAYRTT",data)
+  })
+
+
+  socketioclient.on("PONG",function(data){
+    // console.log("PONG: "+data)
+    socket.emit("RELAYPONG",data)
+  })
+  socketioclient.on("RELAYPOINTAT",function(data){
+    // console.log("PONG: "+data)
+    socket.emit("TOPOINTAT",data)
+  })
   socketioclient.on("RELAYFACETRACKSTATUS",function(data){
     // console.log("FROMLOCALCLOUD "+data)
     socket.broadcast.emit("TOFACETRACKSTATUS",data)
   })
   socketioclient.on("RELAYWAVEHAND",function(data){
     //console.log(data)
-    socket.broadcast.emit("TOTOWAVEANIMATION",data)
+    socket.broadcast.emit("TOWAVEANIMATION",data)
   })
-  socket.on("PING",function(data){
-    // console.log("PING: "+data)
-    socketioclient.emit("RELAYPING",data)
-  })
-  
-  socketioclient.on("PONG",function(data){
-    // console.log("PONG: "+data)
-    socket.emit("RELAYPONG",data)
-  })
-  socket.on("RTT",function(data){
-    socketioclient.emit("RELAYRTT",data)
+  socketioclient.on("RELAYMOTION",function(data){
+    //console.log(data)
+    socket.broadcast.emit("TOMOTION",data)
   })
 
 });
