@@ -33,17 +33,7 @@ const sio = socketio(server,{pingTimeout: 0, origins:"*:*",allowEIO3: true})
 let interval;
 
 sio.on("connection", (socket) => {
-  console.log("RetraDev robot client connected");
-
-  socket.on("pythondata",function(frame){
-    
-    var buff = Buffer.from(frame).toString()
-    let base64data = buff.toString('base64');
-   
-    socketioclient.emit("FROMPYAPI",base64data)
-    
-  })
-  
+  console.log("RetraDev robot client connected");  
 
   socket.on("frontenddata",function(data){
     //console.log(data)
@@ -53,13 +43,6 @@ sio.on("connection", (socket) => {
   socket.on("frontendspeechdata",function(data){
     //console.log(data)
     socketioclient.emit("FROMNODESPEECHAPI",data)
-  })
-
-  socket.on("remoterobotdata",function(data){
-    //console.log(data)
-    
-    socketioclient.emit("FROMREMOTEROBOT",data)
-    
   })
   
   socket.on("PEPPERBATTERY",function(data){
@@ -91,13 +74,6 @@ sio.on("connection", (socket) => {
     // console.log("PING: "+data)
     socketioclient.emit("RELAYPING",data)
   })
-  
-  
-  socket.on("CAMTEST",function(data){
-    // console.log("r")
-    // socket.broadcast.emit("IPCAM",data)
-    socketioclient.emit("RELAYCAMTEST")
-  })
 
   socket.on("RTT",function(data){
     socketioclient.emit("RELAYRTT",data)
@@ -114,15 +90,26 @@ sio.on("connection", (socket) => {
   })
   socketioclient.on("RELAYFACETRACKSTATUS",function(data){
     // console.log("FROMLOCALCLOUD "+data)
-    socket.broadcast.emit("TOFACETRACKSTATUS",data)
+    socket.emit("TOFACETRACKSTATUS",data)
   })
   socketioclient.on("RELAYWAVEHAND",function(data){
     //console.log(data)
-    socket.broadcast.emit("TOWAVEANIMATION",data)
+    socket.emit("TOWAVEANIMATION",data)
   })
   socketioclient.on("RELAYMOTION",function(data){
     //console.log(data)
-    socket.broadcast.emit("TOMOTION",data)
+    socket.emit("TOMOTION",data)
+  })
+  ///////////////////////////////////////////////////////////
+  ////////////////IP CAMERA RELAY AND RESET/////////////////
+  socketioclient.on("RELAYSTARTIPCAM",function(data){
+    socket.emit("STARTIPCAM",data)
+  })
+  socketioclient.on("RELAYRESETIPCAM",function(data){
+    socket.emit("RESETIPCAM",data)
+  })
+  socket.on("IPCAMURL",function(data){
+    socketioclient.emit("RELAYIPCAMURL",data)
   })
 
 });
